@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { NavbarProps } from '../types';
 import { useState } from 'react';
@@ -6,8 +6,16 @@ import SendFundsModal from './SendFundsModal';
 import FundraisingModal from './FundraisingModal';
 
 const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
+  const navigate = useNavigate();
   const [isSendModalOpen, setIsSendModalOpen] = useState(false);
   const [isFundraisingModalOpen, setIsFundraisingModalOpen] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('isLoggedIn');
+    navigate('/');
+    window.location.reload(); // Force refresh to update auth state
+  };
 
   return (
     <>
@@ -45,6 +53,14 @@ const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
                     className="px-4 py-2 rounded-lg bg-primary-color text-white hover:bg-purple-700 transition-colors"
                   >
                     Start Fundraising
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleLogout}
+                    className="px-4 py-2 rounded-lg border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
+                  >
+                    Logout
                   </motion.button>
                 </>
               ) : (

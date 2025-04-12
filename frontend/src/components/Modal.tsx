@@ -5,34 +5,43 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-            onClick={onClose}
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed left-1/3 top-1/4 -translate-x-1/2 -translate-y-1/2 w-full max-w-md z-50"
-          >
-            <div className="bg-white rounded-xl shadow-xl">
-              <div className="flex justify-between items-center p-6 border-b">
-                <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="min-h-screen px-4 text-center">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={onClose}
+            />
+            
+            {/* This element is to trick the browser into centering the modal contents. */}
+            <span
+              className="inline-block h-screen align-middle"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-medium text-gray-900">{title}</h3>
                 <button
                   onClick={onClose}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-400 hover:text-gray-500"
                 >
                   ✕
                 </button>
               </div>
-              <div className="p-6">{children}</div>
-            </div>
-          </motion.div>
-        </>
+              {children}
+            </motion.div>
+          </div>
+        </div>
       )}
     </AnimatePresence>
   );

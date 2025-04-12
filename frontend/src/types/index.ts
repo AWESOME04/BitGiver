@@ -2,8 +2,9 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  password: string;
   userType: 'creator' | 'charity' | 'organization';
-  profileImage?: string;
+  walletAddress?: string;
 }
 
 export interface NavbarProps {
@@ -34,4 +35,8 @@ export interface SendFundsData {
   recipient: string;
   amount: number;
   note?: string;
+}
+
+export interface StoredUsers {
+  [email: string]: User;
 }

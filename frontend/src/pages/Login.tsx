@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { StoredUsers } from '../types';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -11,7 +12,12 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.email === 'evans@gmail.com' && formData.password === '12345qwerty') {
+    
+    const users: StoredUsers = JSON.parse(localStorage.getItem('users') || '{}');
+    const user = users[formData.email];
+
+    if (user && user.password === formData.password) {
+      localStorage.setItem('currentUser', JSON.stringify(user));
       localStorage.setItem('isLoggedIn', 'true');
       navigate('/dashboard');
     } else {
