@@ -1,10 +1,21 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+
 function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-200 to-pink-200 flex flex-col items-center justify-center p-6">
-      <h1 className="text-5xl font-bold text-gray-800 mb-4">
-        BitGiver
-      </h1>
-    </div>
+    <Router>
+      <div className="min-h-screen">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
