@@ -7,63 +7,43 @@ import { v4 as uuidv4 } from 'uuid';
 
 const Signup = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<User>({
     id: uuidv4(),
     username: '',
     email: '',
     password: '',
-    userType: 'creator',
-    walletAddress: ''
+    userType: 'creator'
   });
-  const [lightningAddress, setLightningAddress] = useState<string>('');
-  const [isConnecting, setIsConnecting] = useState(false);
-
-  const connectLightningWallet = async () => {
-    setIsConnecting(true);
-    try {
-      if (typeof window.webln === 'undefined') {
-        toast.error('Please install a WebLN compatible wallet (like Alby) to continue!');
-        return;
-      }
-
-      await window.webln.enable();
-      const info = await window.webln.getInfo();
-      setLightningAddress(info.node.pubkey);
-      setFormData({ ...formData, walletAddress: info.node.pubkey });
-    } catch (error) {
-      console.error('Error connecting Lightning wallet:', error);
-      alert('Failed to connect Lightning wallet. Please make sure you have a compatible wallet installed.');
-    } finally {
-      setIsConnecting(false);
-    }
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.username.trim()) {
-      toast.error('Username is required');
-      return;
+    setIsLoading(true);
+
+    try {
+      if (!formData.username || !formData.email || !formData.password) {
+        toast.error('All fields are required');
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem('users') || '{}');
+      
+      if (users[formData.email]) {
+        toast.error('Email already exists');
+        return;
+      }
+
+      users[formData.email] = formData;
+      localStorage.setItem('users', JSON.stringify(users));
+      toast.success('Account created! Please login.');
+      navigate('/login');
+      
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error('Something went wrong!');
+    } finally {
+      setIsLoading(false);
     }
-
-    const existingUsers = JSON.parse(localStorage.getItem('users') || '{}');
-    
-    if (existingUsers[formData.email]) {
-      toast.error('Email already exists!');
-      return;
-    }
-
-    const newUser: User = {
-      ...formData,
-      userType: formData.userType as 'creator' | 'charity' | 'organization'
-    };
-
-    existingUsers[formData.email] = newUser;
-    localStorage.setItem('users', JSON.stringify(existingUsers));
-    localStorage.setItem('currentUser', JSON.stringify(newUser));
-    localStorage.setItem('isLoggedIn', 'true');
-    
-    navigate('/dashboard');
   };
 
   return (
@@ -127,37 +107,24 @@ const Signup = () => {
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
             </div>
-            <div>
-              <motion.button
-                type="button"
-                onClick={connectLightningWallet}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className={`w-full py-3 rounded-lg border-2 border-white ${
-                  lightningAddress ? 'bg-green-500' : 'bg-white/10'
-                } text-white font-semibold transition-colors flex items-center justify-center gap-2`}
-              >
-                {isConnecting ? (
-                  'Connecting...'
-                ) : lightningAddress ? (
-                  <>
-                    <span>Connected: {lightningAddress.slice(0, 6)}...{lightningAddress.slice(-4)}</span>
-                  </>
-                ) : (
-                  'Connect Lightning Wallet'
-                )}
-              </motion.button>
-            </div>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full py-3 rounded-lg bg-white text-primary-color font-semibold hover:bg-white/90 transition-colors"
+            <button
               type="submit"
-              disabled={!lightningAddress}
+              disabled={isLoading}
+              className="w-full py-3 rounded-lg bg-primary-color text-white hover:bg-purple-700 transition-colors disabled:opacity-50"
             >
-              Sign Up
-            </motion.button>
+              {isLoading ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Loading...
+                </span>
+              ) : (
+                'Create Account'
+              )}
+            </button>
           </form>
           <p className="mt-4 text-center text-white">
             Already have an account?{' '}

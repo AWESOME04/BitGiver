@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
+import { generateInvoice } from '../utils/lightning';
 import Modal from './Modal';
 import { FundraisingFormData } from '../types';
 
@@ -9,6 +11,7 @@ interface Props {
 }
 
 const FundraisingModal = ({ isOpen, onClose }: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<FundraisingFormData>({
     title: '',
     description: '',
@@ -17,11 +20,33 @@ const FundraisingModal = ({ isOpen, onClose }: Props) => {
     category: 'personal',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Creating fundraiser:', formData);
-    // Handle submission logic here
-    onClose();
+    setIsLoading(true);
+
+    try {
+      const invoice = await generateInvoice(
+        Number(formData.goal),
+        formData.title
+      );
+      
+      // Store fundraiser details in localStorage for now
+      const fundraisers = JSON.parse(localStorage.getItem('fundraisers') || '[]');
+      fundraisers.push({
+        ...formData,
+        invoice,
+        created: new Date().toISOString(),
+      });
+      localStorage.setItem('fundraisers', JSON.stringify(fundraisers));
+      
+      toast.success('Fundraiser created successfully!');
+      onClose();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error('Failed to create fundraiser');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -78,24 +103,14 @@ const FundraisingModal = ({ isOpen, onClose }: Props) => {
             min={new Date().toISOString().split('T')[0]}
           />
         </div>
-        {/* <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Description
-          </label>
-          <textarea
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-primary-color"
-            rows={4}
-          />
-        </div> */}
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           type="submit"
           className="w-full py-3 rounded-lg bg-primary-color text-white font-semibold"
+          disabled={isLoading}
         >
-          Create Fundraiser
+          {isLoading ? 'Creating...' : 'Create Fundraiser'}
         </motion.button>
       </form>
     </Modal>

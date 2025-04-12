@@ -10,10 +10,16 @@ interface WebLNInfo {
   supports: string[];
 }
 
+interface MakeInvoiceArgs {
+  amount: string | number;
+  memo?: string;
+  defaultMemo?: string;
+}
+
 interface WebLN {
   enable: () => Promise<void>;
   getInfo: () => Promise<WebLNInfo>;
-  makeInvoice: (args: { amount: string | number }) => Promise<{ paymentRequest: string }>;
+  makeInvoice: (args: MakeInvoiceArgs) => Promise<{ paymentRequest: string }>;
   sendPayment: (paymentRequest: string) => Promise<{ preimage: string }>;
 }
 

@@ -4,7 +4,7 @@ export interface User {
   email: string;
   password: string;
   userType: 'creator' | 'charity' | 'organization';
-  walletAddress?: string;
+  walletAddress?: string; // Make this optional
 }
 
 export interface NavbarProps {
