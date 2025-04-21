@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { User } from '../types';
 import { v4 as uuidv4 } from 'uuid';
+import { signupUser } from '../utils/api';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -16,31 +17,17 @@ const Signup = () => {
     userType: 'creator'
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      if (!formData.username || !formData.email || !formData.password) {
-        toast.error('All fields are required');
-        return;
-      }
-
-      const users = JSON.parse(localStorage.getItem('users') || '{}');
-      
-      if (users[formData.email]) {
-        toast.error('Email already exists');
-        return;
-      }
-
-      users[formData.email] = formData;
-      localStorage.setItem('users', JSON.stringify(users));
-      toast.success('Account created! Please login.');
+      await signupUser(formData);
+      toast.success('Account created successfully! Please login.');
       navigate('/login');
-      
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      toast.error('Something went wrong!');
+    } catch (err: unknown) {
+      const error = err as Error;
+      toast.error(error.message || 'Failed to create account');
     } finally {
       setIsLoading(false);
     }

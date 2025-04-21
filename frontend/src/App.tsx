@@ -1,35 +1,58 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isLoggedIn } = useAuth();
+  return !isLoggedIn ? <>{children}</> : <Navigate to="/dashboard" />;
+};
+
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    setIsLoggedIn(loggedIn);
-  }, []);
-
   return (
-    <Router>
-      <div className="min-h-screen">
-        <Navbar isLoggedIn={isLoggedIn} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route 
-            path="/dashboard" 
-            element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />} 
-          />
-        </Routes>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route 
+              path="/login" 
+              element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/signup" 
+              element={
+                <PublicRoute>
+                  <Signup />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isLoggedIn } = useAuth();
+  return isLoggedIn ? <>{children}</> : <Navigate to="/login" />;
+};
 
 export default App;
