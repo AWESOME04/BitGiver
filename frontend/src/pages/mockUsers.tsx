@@ -63,12 +63,4 @@ export const mockUsers = [
         imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop',
         walletAddress: 'bc1q...vwx567'
     },
-    {
-        id: '10',
-        name: 'Creative Arts Foundation',
-        type: 'arts',
-        description: 'Fostering creativity and artistic expression in underrepresented communities.',
-        imageUrl: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=150&h=150&fit=crop',
-        walletAddress: 'bc1q...yza890'
-    }
 ];

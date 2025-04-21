@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
 
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const { isLoggedIn } = useAuth();
@@ -43,6 +44,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/profile/:id" element={<Profile />} />
           </Routes>
         </div>
       </Router>
