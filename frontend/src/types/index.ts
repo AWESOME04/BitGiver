@@ -7,10 +7,6 @@ export interface User {
   walletAddress?: string; // Make this optional
 }
 
-export interface NavbarProps {
-  isLoggedIn?: boolean;
-}
-
 export interface AnimationVariants {
   hidden: object;
   visible: object;

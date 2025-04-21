@@ -1,19 +1,22 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { NavbarProps } from '../types';
+import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
 import SendFundsModal from './SendFundsModal';
 import FundraisingModal from './FundraisingModal';
 
-const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
+const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { isLoggedIn, logout } = useAuth();
   const [isSendModalOpen, setIsSendModalOpen] = useState(false);
   const [isFundraisingModalOpen, setIsFundraisingModalOpen] = useState(false);
 
+  const isDashboard = location.pathname === '/dashboard';
+
   const handleLogout = () => {
-    localStorage.clear();
-    navigate('/');
-    window.location.reload(); // Force refresh to update auth state
+    logout();
+    navigate('/', { replace: true });
   };
 
   return (
@@ -37,28 +40,33 @@ const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
             <div className="flex items-center gap-4">
               {isLoggedIn ? (
                 <>
-                  <Link
-                    to="/dashboard"
-                    className="px-4 py-2 rounded-lg text-primary-color hover:bg-primary-color hover:text-white transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsSendModalOpen(true)}
-                    className="px-4 py-2 rounded-lg bg-primary-color text-white hover:bg-purple-700 transition-colors"
-                  >
-                    Send Funds
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsFundraisingModalOpen(true)}
-                    className="px-4 py-2 rounded-lg border-2 border-primary-color text-primary-color hover:bg-primary-color hover:text-white transition-colors"
-                  >
-                    Start Fundraising
-                  </motion.button>
+                  {isDashboard ? (
+                    <>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setIsSendModalOpen(true)}
+                        className="px-4 py-2 rounded-lg bg-primary-color text-white hover:bg-purple-700 transition-colors"
+                      >
+                        Send Funds
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setIsFundraisingModalOpen(true)}
+                        className="px-4 py-2 rounded-lg border-2 border-primary-color text-primary-color hover:bg-primary-color hover:text-white transition-colors"
+                      >
+                        Start Fundraising
+                      </motion.button>
+                    </>
+                  ) : (
+                    <Link
+                      to="/dashboard"
+                      className="px-4 py-2 rounded-lg text-primary-color hover:bg-primary-color hover:text-white transition-colors"
+                    >
+                      Dashboard
+                    </Link>
+                  )}
                   <button
                     onClick={handleLogout}
                     className="px-4 py-2 rounded-lg border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
