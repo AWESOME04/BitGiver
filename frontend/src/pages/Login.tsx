@@ -2,9 +2,12 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { loginUser } from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -14,29 +17,19 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
-      const users = JSON.parse(localStorage.getItem('users') || '{}');
-      const user = users[formData.email];
-
-      if (!user) {
-        toast.error('User not found!');
-        return;
-      }
-
-      if (user.password !== formData.password) {
-        toast.error('Invalid password!');
-        return;
-      }
-
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      localStorage.setItem('isLoggedIn', 'true');
-      toast.success('Welcome back!');
-      navigate('/dashboard');
+      const response = await loginUser(formData);
       
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      toast.error('Something went wrong!');
+      if (response.token) {
+        login(response.token);
+        toast.success('Login successful!');
+        navigate('/dashboard', { replace: true });
+      }
+    } catch (err: unknown) {
+      const error = err as Error;
+      toast.error(error.message || 'Failed to login');
+      console.error('Login error:', error);
     } finally {
       setIsLoading(false);
     }

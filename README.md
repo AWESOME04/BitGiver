@@ -31,7 +31,7 @@ A decentralized donation platform using Bitcoin Lightning Network for seamless t
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/bitgiver.git
+git clone https://github.com/AWESOME04/bitgiver.git
 
 # Navigate to project directory
 cd bitgiver
