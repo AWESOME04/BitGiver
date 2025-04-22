@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import StatCard from '../components/dashboard/StatCard';
 import { mockUsers } from '../data/mockUsers';
 import { stats } from '../data/stats';
+import WalletCard from '../components/dashboard/WalletCard';
+import { useAuth } from '../context/AuthContext';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const { address, balance } =  useAuth();
 
   const handleViewProfile = (userId: string) => {
     navigate(`/profile/${userId}`);
@@ -33,6 +36,14 @@ const Dashboard = () => {
               {...stat}
             />
           ))}
+          { address && balance && <WalletCard
+            title="Wallet Balance"
+            balance={balance}
+            currency="BTC"
+            address={address}
+            gradientFrom="purple-500"
+            gradientTo="purple-700"/> }
+          
         </div>
 
         {/* Main Content Area */}

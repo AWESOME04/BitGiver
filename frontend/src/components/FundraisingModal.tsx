@@ -39,7 +39,7 @@ const FundraisingModal = ({ isOpen, onClose }: ModalProps) => {
       onClose();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.error('Failed to create fundraiser');
+      toast.error(`Failed to create fundraiser, ${error}`);
     } finally {
       setIsLoading(false);
     }
