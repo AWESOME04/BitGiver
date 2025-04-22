@@ -2,8 +2,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
-import SendFundsModal from './SendFundsModal';
-import FundraisingModal from './FundraisingModal';
+import SendFundsModal from '../components/SendFundsModal';
+import FundraisingModal from '../components/FundraisingModal';
 
 const Navbar = () => {
   const navigate = useNavigate();

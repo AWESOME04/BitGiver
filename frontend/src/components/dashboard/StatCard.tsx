@@ -1,13 +1,5 @@
 import { motion } from 'framer-motion';
-
-interface StatCardProps {
-  title: string;
-  value: string;
-  icon: string;
-  trend?: number;
-  gradientFrom: string;
-  gradientTo: string;
-}
+import { StatCardProps } from '../../types/dashboard';
 
 const StatCard = ({ title, value, icon, trend, gradientFrom, gradientTo }: StatCardProps) => (
   <motion.div

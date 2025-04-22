@@ -1,14 +1,10 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { sendPayment } from '../utils/lightning';
-import Modal from './Modal';
+import Modal from '../layout/Modal';
+import { ModalProps } from '../types/dashboard';
 
-interface SendFundsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const SendFundsModal = ({ isOpen, onClose }: SendFundsModalProps) => {
+const SendFundsModal = ({ isOpen, onClose }: ModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     amount: '',

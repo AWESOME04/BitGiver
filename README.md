@@ -13,10 +13,9 @@ A decentralized donation platform using Bitcoin Lightning Network for seamless t
 ## Tech Stack
 
 - **Frontend**: React, TypeScript, Tailwind CSS, Framer Motion
-- **Storage**: LocalStorage (MVP), planned MongoDB integration
+- **Backend**: Node js
+- **Database**:  MongoDB
 - **Lightning**: WebLN, Polar (testing)
-- **Styling**: Tailwind CSS
-- **Animation**: Framer Motion
 
 ## Getting Started
 
@@ -36,6 +35,9 @@ git clone https://github.com/AWESOME04/bitgiver.git
 # Navigate to project directory
 cd bitgiver
 
+# navigate to the frontend
+cd frontend
+
 # Install dependencies
 npm install
 
@@ -43,12 +45,13 @@ npm install
 npm run dev
 ```
 
-### Lightning Network Testing with Polar
+### Lightning Network Testing with Polar (Coming Soon...)
 
 1. Install and setup Polar
 2. Create a new network with at least 2 nodes
 3. Fund channels between nodes
 4. Use REST API details from Polar for testing
+
 
 ## Project Structure
 
@@ -57,11 +60,24 @@ bitgiver/
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
+│   │   │   ├── dashboard/
+│   │   │   ├── home/
+│   │   │   └── shared/
+│   │   ├── context/
+│   │   ├── layout/
 │   │   ├── pages/
 │   │   ├── utils/
-│   │   └── types/
+│   │   ├── types/
+│   │   └── data/
 │   ├── public/
 │   └── package.json
+├── backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── server.js
+│   └── package.json
+├── CONTRIBUTING.md
 └── README.md
 ```
 
@@ -98,15 +114,13 @@ lncli --network=regtest walletbalance
 
 ## Contributing
 
-1. Fork the repository
-2. Create feature branch
-3. Commit changes
-4. Push to branch
-5. Open pull request
+Please read our [Contributing Guide](./CONTRIBUTING.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to BitGiver.
 
-## License
-
-MIT License
+Key areas we're currently focusing on:
+1. Lightning Network Integration
+2. Web3 Wallet Integration
+3. Smart Contract Development
+4. UI/UX Improvements
 
 ## Acknowledgments
 
