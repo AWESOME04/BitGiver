@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { mockUsers } from './mockUsers';
+import { mockUsers } from '../data/mockUsers';
 
 const Profile = () => {
   const { id } = useParams();

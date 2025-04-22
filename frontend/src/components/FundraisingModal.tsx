@@ -2,15 +2,11 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { generateInvoice } from '../utils/lightning';
-import Modal from './Modal';
+import Modal from '../layout/Modal';
 import { FundraisingFormData } from '../types';
+import { ModalProps } from '../types/dashboard';
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const FundraisingModal = ({ isOpen, onClose }: Props) => {
+const FundraisingModal = ({ isOpen, onClose }: ModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<FundraisingFormData>({
     title: '',

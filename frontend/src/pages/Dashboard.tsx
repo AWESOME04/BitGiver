@@ -2,47 +2,13 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import StatCard from '../components/dashboard/StatCard';
-import { mockUsers } from './mockUsers';
+import { mockUsers } from '../data/mockUsers';
+import { stats } from '../data/stats';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-
-  const stats = [
-    {
-      title: "Total Donations",
-      value: "₿1.234",
-      icon: "💰",
-      trend: 12,
-      gradientFrom: "purple-500",
-      gradientTo: "pink-500"
-    },
-    {
-      title: "Active Campaigns",
-      value: "24",
-      icon: "🎯",
-      trend: 8,
-      gradientFrom: "blue-500",
-      gradientTo: "cyan-500"
-    },
-    {
-      title: "Total Impact",
-      value: "$50K+",
-      icon: "🌟",
-      trend: 15,
-      gradientFrom: "green-500",
-      gradientTo: "emerald-500"
-    },
-    {
-      title: "Community Members",
-      value: "1.2K",
-      icon: "👥",
-      trend: 5,
-      gradientFrom: "orange-500",
-      gradientTo: "amber-500"
-    }
-  ];
 
   const handleViewProfile = (userId: string) => {
     navigate(`/profile/${userId}`);
