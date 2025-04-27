@@ -1,9 +1,11 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SendFundsModal from '../components/SendFundsModal';
 import FundraisingModal from '../components/FundraisingModal';
+import { connectMetamaskWallet } from '../utils/wallet';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -11,12 +13,63 @@ const Navbar = () => {
   const { isLoggedIn, logout } = useAuth();
   const [isSendModalOpen, setIsSendModalOpen] = useState(false);
   const [isFundraisingModalOpen, setIsFundraisingModalOpen] = useState(false);
+  const { setAddress, setBalance } = useAuth();
+  const [connectedWallet, setConnectedWallet] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
+  const { address, balance } = useAuth();
 
   const isDashboard = location.pathname === '/dashboard';
 
   const handleLogout = () => {
     logout();
     navigate('/', { replace: true });
+  };
+
+  useEffect(() => {
+    const address = localStorage.getItem('walletAddress');
+    const balance = localStorage.getItem('walletBalance');
+    if (address) setAddress(address);
+    if (balance) setBalance(balance);
+    if (address && balance) setConnectedWallet(true);
+  }
+  , [address, balance]);
+
+  const connectWallet = async () => {
+    try {
+      // Check if Wallet is already connected
+      const existingAddress = localStorage.getItem('walletAddress');
+      const existingBalance = localStorage.getItem('walletBalance');
+      if (existingAddress && existingBalance) {
+        console.log(`Wallet already connected: ${existingAddress} with balance: ${existingBalance}`);
+        toast.info('Wallet already connected!');
+        return;
+      }
+      setLoading(true);
+      const { address, balance, error } = await connectMetamaskWallet();
+
+      if (error) {
+        console.error('Error connecting to wallet:', error);
+        toast.error(`Failed to connect wallet, ${error}`);
+        return;
+      }
+      
+      if (address && balance) {
+        // Store wallet address and balance in localStorage or state
+        localStorage.setItem('walletAddress', address);
+        localStorage.setItem('walletBalance', balance);
+        setAddress(address);
+        setBalance(balance);
+        console.log(`Connected to wallet: ${address} with balance: ${balance}`);
+        setConnectedWallet(address);
+        toast.success('Wallet connected successfully!');
+      }
+      
+    } catch (error) {
+      console.error('Error connecting wallet:', error);
+      toast.error(`Failed to connect wallet, ${error}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -42,6 +95,14 @@ const Navbar = () => {
                 <>
                   {isDashboard ? (
                     <>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={connectWallet}
+                        className={`px-4 py-2 rounded-lg  ${ connectedWallet ? "bg-green-500" : "bg-primary-color"}  text-white hover:bg-purple-700 transition-colors`}
+                      >
+                        { connectedWallet ? "Connected" : loading ? "Connecting..." : "Connect Wallet" }
+                      </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}

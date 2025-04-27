@@ -23,6 +23,11 @@ interface WebLN {
   sendPayment: (paymentRequest: string) => Promise<{ preimage: string }>;
 }
 
+interface Ethereum {
+
+}
+
 interface Window {
   webln?: WebLN;
+  ethereum?: Ethereum;
 }

@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import { ToastContainer } from 'react-toastify';
 
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const { isLoggedIn } = useAuth();
@@ -47,6 +48,7 @@ function App() {
             <Route path="/profile/:id" element={<Profile />} />
           </Routes>
         </div>
+        <ToastContainer />
       </Router>
     </AuthProvider>
   );
